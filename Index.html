@@ -14,6 +14,7 @@ canvas{display:block}
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
 import { criarMapa } from './mapas/mapa1.js';
 import { criarPlayer } from './player/player.js';
+import { criarJoystick } from './ui/joystick.js';
 
 const cena = new THREE.Scene();
 cena.background = new THREE.Color(0x87ceeb);
@@ -31,11 +32,17 @@ cena.add(luz);
 cena.add(new THREE.AmbientLight(0xffffff,0.5));
 
 cena.add(criarMapa());
+
 const player = criarPlayer();
 cena.add(player);
 
+const joystick = criarJoystick();
+
 function animar(){
  requestAnimationFrame(animar);
+
+ player.atualizar(joystick);
+
  camera.lookAt(player.position);
  renderer.render(cena,camera);
 }
