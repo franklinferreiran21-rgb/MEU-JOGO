@@ -1,9 +1,0 @@
-{
-  "name": "Meu Jogo 3D",
-  "short_name": "Meu Jogo",
-  "start_url": "./index.html",
-  "display": "fullscreen",
-  "orientation": "landscape",
-  "background_color": "#000000",
-  "theme_color": "#000000"
-}
