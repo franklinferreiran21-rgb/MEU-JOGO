@@ -29,8 +29,9 @@ export function criarCameraRotativa(camera, alvo){
         // Rotacao horizontal (eixo Y)
         rotacaoY -= dx * 0.008;
 
-        // Rotacao vertical (eixo X)
-        rotacaoX -= dy * 0.006;
+        // Rotacao vertical (eixo X) corrigida
+        // Arrastar para cima agora olha para cima
+        rotacaoX += dy * 0.006;
         rotacaoX = Math.max(-1.1, Math.min(1.1, rotacaoX));
 
         ultimoX = e.clientX;
