@@ -1,6 +1,6 @@
 class Player {
     constructor(scene) {
-        this.speed = 0.25;
+        this.speed = 0.09;
         
         this.width = 1;
         this.height = 2;
