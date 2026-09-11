@@ -10,18 +10,19 @@ export function criarCameraRotativa(camera, alvo){
  const sensibilidadeY = 0.03;
  const sensibilidadeX = 0.02;
 
- const elemento = camera;
+ const tela = document.querySelector('canvas') || document;
 
- elemento.domElement?.addEventListener('pointerdown',(e)=>{
-   if(e.target.closest('#joystick')) return;
+ tela.addEventListener('pointerdown',(e)=>{
+   if(e.target.closest && e.target.closest('#joystick')) return;
 
    ponteiro = e.pointerId;
    ultimoX = e.clientX;
    ultimoY = e.clientY;
-   elemento.domElement.setPointerCapture?.(e.pointerId);
- });
 
- elemento.domElement?.addEventListener('pointermove',(e)=>{
+   tela.setPointerCapture?.(e.pointerId);
+ }, {passive:false});
+
+ tela.addEventListener('pointermove',(e)=>{
    if(e.pointerId !== ponteiro) return;
 
    const dx = e.clientX - ultimoX;
@@ -34,9 +35,9 @@ export function criarCameraRotativa(camera, alvo){
 
    ultimoX = e.clientX;
    ultimoY = e.clientY;
- });
+ }, {passive:false});
 
- elemento.domElement?.addEventListener('pointerup',(e)=>{
+ tela.addEventListener('pointerup',(e)=>{
    if(e.pointerId === ponteiro){
      ponteiro = null;
    }
