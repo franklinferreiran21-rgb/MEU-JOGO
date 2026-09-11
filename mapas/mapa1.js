@@ -8,20 +8,5 @@ export function criarMapa(){
  const chao = new THREE.Mesh(geometria,material);
  chao.position.y=-0.1;
  grupo.add(chao);
-
- const paredeMaterial = new THREE.MeshStandardMaterial({color:0x777777});
- const paredes=[
-  [20,2,0,0,1,-10],
-  [20,2,0,0,1,10],
-  [2,2,20,-10,1,0],
-  [2,2,20,10,1,0]
- ];
-
- paredes.forEach(p=>{
-  const parede=new THREE.Mesh(new THREE.BoxGeometry(p[0],p[1],p[2]),paredeMaterial);
-  parede.position.set(p[3],p[4],p[5]);
-  grupo.add(parede);
- });
-
- return grupo;
+ 
 }
