@@ -1,72 +1,57 @@
 export function criarCameraRotativa(camera, alvo){
 
-    let distancia = 8;
+ let distancia = 8;
+ let rotacaoY = 0;
+ let rotacaoX = 0.35;
+ let ponteiro = null;
+ let ultimoX = 0;
+ let ultimoY = 0;
 
-    let rotacaoY = 0;
-    let rotacaoX = 0.35;
+ const sensibilidadeY = 0.012;
+ const sensibilidadeX = 0.010;
 
-    let alvoRotacaoY = 0;
-    let alvoRotacaoX = 0.35;
+ const canvas = camera;
 
-    let ponteiroCamera = null;
-    let ultimoX = 0;
-    let ultimoY = 0;
+ document.addEventListener('pointerdown',(e)=>{
+   if(e.target.closest('#joystick')) return;
 
-    const sensibilidadeY = 0.04;
-    const sensibilidadeX = 0.025;
-    const suavidade = 0.45;
+   ponteiro = e.pointerId;
+   ultimoX = e.clientX;
+   ultimoY = e.clientY;
+ });
 
-    document.addEventListener('pointerdown',(e)=>{
-        if(e.target.closest('#joystick')) return;
+ document.addEventListener('pointermove',(e)=>{
+   if(e.pointerId !== ponteiro) return;
 
-        ponteiroCamera = e.pointerId;
-        ultimoX = e.clientX;
-        ultimoY = e.clientY;
+   const dx = e.clientX - ultimoX;
+   const dy = e.clientY - ultimoY;
 
-        if(e.target.setPointerCapture){
-            e.target.setPointerCapture(e.pointerId);
-        }
-    }, {passive:false});
+   rotacaoY -= dx * sensibilidadeY;
+   rotacaoX += dy * sensibilidadeX;
 
-    document.addEventListener('pointermove',(e)=>{
-        if(e.pointerId !== ponteiroCamera) return;
+   rotacaoX = Math.max(-1.2, Math.min(1.2, rotacaoX));
 
-        const dx = e.clientX - ultimoX;
-        const dy = e.clientY - ultimoY;
+   ultimoX = e.clientX;
+   ultimoY = e.clientY;
+ });
 
-        alvoRotacaoY -= dx * sensibilidadeY;
-        alvoRotacaoX += dy * sensibilidadeX;
+ document.addEventListener('pointerup',(e)=>{
+   if(e.pointerId === ponteiro) ponteiro = null;
+ });
 
-        alvoRotacaoX = Math.max(-1.2, Math.min(1.2, alvoRotacaoX));
+ function atualizar(){
+   const horizontal = Math.cos(rotacaoX) * distancia;
 
-        ultimoX = e.clientX;
-        ultimoY = e.clientY;
-    }, {passive:false});
+   camera.position.x = alvo.position.x + Math.sin(rotacaoY) * horizontal;
+   camera.position.y = alvo.position.y + Math.sin(rotacaoX) * distancia + 2;
+   camera.position.z = alvo.position.z + Math.cos(rotacaoY) * horizontal;
 
-    document.addEventListener('pointerup',(e)=>{
-        if(e.pointerId === ponteiroCamera){
-            ponteiroCamera = null;
-        }
-    });
+   camera.lookAt(alvo.position);
+ }
 
-    function atualizar(){
-
-        rotacaoY += (alvoRotacaoY - rotacaoY) * suavidade;
-        rotacaoX += (alvoRotacaoX - rotacaoX) * suavidade;
-
-        const horizontal = Math.cos(rotacaoX) * distancia;
-
-        const x = alvo.position.x + Math.sin(rotacaoY) * horizontal;
-        const y = alvo.position.y + Math.sin(rotacaoX) * distancia + 2;
-        const z = alvo.position.z + Math.cos(rotacaoY) * horizontal;
-
-        camera.position.set(x,y,z);
-        camera.lookAt(alvo.position);
-    }
-
-    return {
-        atualizar,
-        getRotacaoY:()=>rotacaoY,
-        getRotacaoX:()=>rotacaoX
-    };
+ return {
+   atualizar,
+   getRotacaoY:()=>rotacaoY,
+   getRotacaoX:()=>rotacaoX
+ };
 }
