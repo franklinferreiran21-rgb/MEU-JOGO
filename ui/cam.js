@@ -12,10 +12,9 @@ export function criarCameraRotativa(camera, alvo){
     let ultimoX = 0;
     let ultimoY = 0;
 
-    // Mais resposta no toque para orbit 360
-    const sensibilidadeY = 0.025;
-    const sensibilidadeX = 0.018;
-    const suavidade = 0.35;
+    const sensibilidadeY = 0.04;
+    const sensibilidadeX = 0.025;
+    const suavidade = 0.45;
 
     document.addEventListener('pointerdown',(e)=>{
         if(e.target.closest('#joystick')) return;
@@ -24,8 +23,10 @@ export function criarCameraRotativa(camera, alvo){
         ultimoX = e.clientX;
         ultimoY = e.clientY;
 
-        e.target.setPointerCapture?.(e.pointerId);
-    });
+        if(e.target.setPointerCapture){
+            e.target.setPointerCapture(e.pointerId);
+        }
+    }, {passive:false});
 
     document.addEventListener('pointermove',(e)=>{
         if(e.pointerId !== ponteiroCamera) return;
@@ -33,16 +34,14 @@ export function criarCameraRotativa(camera, alvo){
         const dx = e.clientX - ultimoX;
         const dy = e.clientY - ultimoY;
 
-        // Orbit horizontal 360 graus
         alvoRotacaoY -= dx * sensibilidadeY;
-
-        // Movimento vertical da câmera
         alvoRotacaoX += dy * sensibilidadeX;
+
         alvoRotacaoX = Math.max(-1.2, Math.min(1.2, alvoRotacaoX));
 
         ultimoX = e.clientX;
         ultimoY = e.clientY;
-    });
+    }, {passive:false});
 
     document.addEventListener('pointerup',(e)=>{
         if(e.pointerId === ponteiroCamera){
