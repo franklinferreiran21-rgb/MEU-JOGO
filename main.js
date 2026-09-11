@@ -3,6 +3,9 @@ import { criarMapa } from './mapas/mapa1.js';
 import { criarPlayer } from './player/player.js';
 import { criarJoystick } from './ui/joystick.js';
 import { criarCameraRotativa } from './ui/cam.js';
+import { criarTelaInicial } from './ui/tela_inicial.js';
+
+function iniciarJogo(){
 
 const cena = new THREE.Scene();
 cena.background = new THREE.Color(0x87ceeb);
@@ -35,3 +38,7 @@ addEventListener('resize',()=>{
  camera.aspect = innerWidth / innerHeight;
  camera.updateProjectionMatrix();
 });
+
+}
+
+criarTelaInicial(iniciarJogo);
