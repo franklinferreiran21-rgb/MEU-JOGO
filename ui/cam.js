@@ -7,18 +7,26 @@ export function criarCameraRotativa(camera, alvo){
     let rotacaoX = 0;
 
     let arrastando = false;
+    let ponteiroCamera = null;
     let ultimoX = 0;
     let ultimoY = 0;
 
     window.addEventListener('pointerdown',(e)=>{
+
+        // ignora toque no joystick
+        if(e.target.closest('#joystick')) return;
+
         arrastando = true;
+        ponteiroCamera = e.pointerId;
         ultimoX = e.clientX;
         ultimoY = e.clientY;
+
     });
 
     window.addEventListener('pointermove',(e)=>{
 
         if(!arrastando) return;
+        if(e.pointerId !== ponteiroCamera) return;
 
         const dx = e.clientX - ultimoX;
         const dy = e.clientY - ultimoY;
@@ -26,17 +34,21 @@ export function criarCameraRotativa(camera, alvo){
         rotacaoY -= dx * 0.005;
         rotacaoX -= dy * 0.005;
 
-        rotacaoX = Math.max(-1,Math.min(1,rotacaoX));
+        rotacaoX = Math.max(-1, Math.min(1, rotacaoX));
 
         ultimoX = e.clientX;
         ultimoY = e.clientY;
 
     });
 
-    window.addEventListener('pointerup',()=>{
-        arrastando = false;
-    });
+    window.addEventListener('pointerup',(e)=>{
 
+        if(e.pointerId !== ponteiroCamera) return;
+
+        arrastando = false;
+        ponteiroCamera = null;
+
+    });
 
     function atualizar(){
 
