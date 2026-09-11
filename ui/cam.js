@@ -7,20 +7,21 @@ export function criarCameraRotativa(camera, alvo){
  let ultimoX = 0;
  let ultimoY = 0;
 
- const sensibilidadeY = 0.012;
- const sensibilidadeX = 0.010;
+ const sensibilidadeY = 0.03;
+ const sensibilidadeX = 0.02;
 
- const canvas = camera;
+ const elemento = camera;
 
- document.addEventListener('pointerdown',(e)=>{
+ elemento.domElement?.addEventListener('pointerdown',(e)=>{
    if(e.target.closest('#joystick')) return;
 
    ponteiro = e.pointerId;
    ultimoX = e.clientX;
    ultimoY = e.clientY;
+   elemento.domElement.setPointerCapture?.(e.pointerId);
  });
 
- document.addEventListener('pointermove',(e)=>{
+ elemento.domElement?.addEventListener('pointermove',(e)=>{
    if(e.pointerId !== ponteiro) return;
 
    const dx = e.clientX - ultimoX;
@@ -29,22 +30,26 @@ export function criarCameraRotativa(camera, alvo){
    rotacaoY -= dx * sensibilidadeY;
    rotacaoX += dy * sensibilidadeX;
 
-   rotacaoX = Math.max(-1.2, Math.min(1.2, rotacaoX));
+   rotacaoX = Math.max(-1.1, Math.min(1.1, rotacaoX));
 
    ultimoX = e.clientX;
    ultimoY = e.clientY;
  });
 
- document.addEventListener('pointerup',(e)=>{
-   if(e.pointerId === ponteiro) ponteiro = null;
+ elemento.domElement?.addEventListener('pointerup',(e)=>{
+   if(e.pointerId === ponteiro){
+     ponteiro = null;
+   }
  });
 
  function atualizar(){
    const horizontal = Math.cos(rotacaoX) * distancia;
 
-   camera.position.x = alvo.position.x + Math.sin(rotacaoY) * horizontal;
-   camera.position.y = alvo.position.y + Math.sin(rotacaoX) * distancia + 2;
-   camera.position.z = alvo.position.z + Math.cos(rotacaoY) * horizontal;
+   camera.position.set(
+     alvo.position.x + Math.sin(rotacaoY) * horizontal,
+     alvo.position.y + Math.sin(rotacaoX) * distancia + 2,
+     alvo.position.z + Math.cos(rotacaoY) * horizontal
+   );
 
    camera.lookAt(alvo.position);
  }
