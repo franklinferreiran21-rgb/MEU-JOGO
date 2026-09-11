@@ -12,8 +12,19 @@ export function criarPlayer(){
 
  player.atualizar = function(joystick){
 
-   player.position.x += joystick.x * player.velocidade;
-   player.position.z += joystick.y * player.velocidade;
+   const x = joystick.x;
+   const z = joystick.y;
+
+   player.position.x += x * player.velocidade;
+   player.position.z += z * player.velocidade;
+
+   // Faz o player virar para a direção do movimento
+   if(Math.abs(x) > 0.1 || Math.abs(z) > 0.1){
+
+      const angulo = Math.atan2(x, z);
+      player.rotation.y = angulo;
+
+   }
 
  };
 
