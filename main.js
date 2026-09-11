@@ -1,18 +1,12 @@
 // main.js - O Cérebro do Jogo
 
-// Importando as classes dos seus respectivos arquivos
-import Mapa from './mapa/mapa.js';
-import Joystick from './ui/joystick.js';
-import Player from './player/player.js';
-import CameraOrbit from './ui/cam.js';
-
 const tamanhoMapa = 200; 
 
 // 1. Instancia o Mapa
 const mapa = new Mapa(tamanhoMapa);
 const scene = mapa.getScene(); 
 
-// 2. Configura a Câmera Base e Renderizador
+// 2. Configura a Câmera e Renderizador
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 
