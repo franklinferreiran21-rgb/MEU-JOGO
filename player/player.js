@@ -8,37 +8,36 @@ export function criarPlayer(){
  const player = new THREE.Mesh(geometria,material);
  player.position.y=1;
 
- // Olho do player
  const olhoGeometria = new THREE.SphereGeometry(0.12,16,16);
  const olhoMaterial = new THREE.MeshStandardMaterial({color:0xffffff});
  const olho = new THREE.Mesh(olhoGeometria, olhoMaterial);
-
  olho.position.set(0,0.45,0.42);
  player.add(olho);
 
- // Pupila
  const pupilaGeometria = new THREE.SphereGeometry(0.05,16,16);
  const pupilaMaterial = new THREE.MeshStandardMaterial({color:0x000000});
- const pupila = new THREE.Mesh(pupilaGeometria, pupilaMaterial);
-
+ const pupila = new THREE.Mesh(pupilaGeometria,pupilaMaterial);
  pupila.position.set(0,0,0.1);
  olho.add(pupila);
 
  player.velocidade = 0.08;
 
- player.atualizar = function(joystick){
+ player.atualizar = function(joystick, cameraRotacao = 0){
 
    const x = joystick.x;
    const z = joystick.y;
 
-   player.position.x += x * player.velocidade;
-   player.position.z += z * player.velocidade;
+   const cos = Math.cos(cameraRotacao);
+   const sin = Math.sin(cameraRotacao);
+
+   const movX = x * cos + z * sin;
+   const movZ = z * cos - x * sin;
+
+   player.position.x += movX * player.velocidade;
+   player.position.z += movZ * player.velocidade;
 
    if(Math.abs(x) > 0.1 || Math.abs(z) > 0.1){
-
-      const angulo = Math.atan2(x, z);
-      player.rotation.y = angulo;
-
+      player.rotation.y = Math.atan2(movX, movZ);
    }
 
  };
