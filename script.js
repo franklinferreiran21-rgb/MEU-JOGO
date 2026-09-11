@@ -9,10 +9,39 @@ import './ui/controles/touch_drag.js';
 
 import { criarCamera, seguirPlayer } from './ui/cam.js';
 
-
 const telaInicial = document.getElementById("tela-inicial");
 
 let jogoIniciado = false;
+let renderer;
+
+
+async function entrarTelaCheia(){
+
+  try {
+
+    const elemento = renderer?.domElement || document.documentElement;
+
+    if (!document.fullscreenElement && elemento.requestFullscreen) {
+
+      await elemento.requestFullscreen({
+        navigationUI: "hide"
+      });
+
+    }
+
+    if (screen.orientation && screen.orientation.lock) {
+
+      await screen.orientation.lock("landscape");
+
+    }
+
+  } catch (erro) {
+
+    console.log("Fullscreen/rotacao bloqueada:", erro);
+
+  }
+
+}
 
 
 async function iniciarJogo(e) {
@@ -23,61 +52,20 @@ async function iniciarJogo(e) {
 
   jogoIniciado = true;
 
-  try {
-
-    if (!document.fullscreenElement) {
-
-      await document.documentElement.requestFullscreen({
-        navigationUI: "hide"
-      });
-
-    }
-
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    if (screen.orientation && screen.orientation.lock) {
-
-      await screen.orientation.lock("landscape");
-
-    }
-
-    console.log("Fullscreen e rotacao OK");
-
-  } catch (erro) {
-
-    console.log("Fullscreen/rotacao bloqueada:", erro);
-
-  }
+  await entrarTelaCheia();
 
   telaInicial.style.display = "none";
 
 }
 
 
-telaInicial.addEventListener(
-  "pointerdown",
-  iniciarJogo
-);
-
-
-document.addEventListener(
-  "fullscreenchange",
-  () => {
-
-    if (!document.fullscreenElement) {
-
-      jogoIniciado = false;
-      telaInicial.style.display = "flex";
-
-    }
-
-  }
-);
+telaInicial.addEventListener("click", iniciarJogo);
+telaInicial.addEventListener("touchstart", iniciarJogo, { passive:false });
 
 
 const cena = new THREE.Scene();
 
-const renderer = new THREE.WebGLRenderer({
+renderer = new THREE.WebGLRenderer({
   antialias: true
 });
 
@@ -102,21 +90,15 @@ const player = criarPlayer();
 cena.add(player);
 
 
-function animar() {
+function animar(){
 
   requestAnimationFrame(animar);
 
   player.atualizar();
 
-  seguirPlayer(
-    camera,
-    player
-  );
+  seguirPlayer(camera, player);
 
-  renderer.render(
-    cena,
-    camera
-  );
+  renderer.render(cena, camera);
 
 }
 
