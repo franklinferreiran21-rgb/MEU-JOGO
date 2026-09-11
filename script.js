@@ -13,6 +13,7 @@ const telaInicial = document.getElementById("tela-inicial");
 
 let jogoIniciado = false;
 let renderer;
+let camera;
 
 async function entrarTelaCheia(){
 
@@ -44,6 +45,26 @@ async function entrarTelaCheia(){
 
 }
 
+function atualizarTela(){
+
+  if (!renderer || !camera) return;
+
+  const largura = window.innerWidth;
+  const altura = window.innerHeight;
+
+  renderer.setPixelRatio(window.devicePixelRatio);
+
+  renderer.setSize(
+    largura,
+    altura,
+    false
+  );
+
+  camera.aspect = largura / altura;
+  camera.updateProjectionMatrix();
+
+}
+
 async function iniciarJogo(e) {
 
   e.preventDefault();
@@ -54,13 +75,13 @@ async function iniciarJogo(e) {
 
   await entrarTelaCheia();
 
+  setTimeout(atualizarTela, 300);
+
   telaInicial.style.display = "none";
 
 }
 
-
 telaInicial.addEventListener("pointerup", iniciarJogo);
-
 
 const cena = new THREE.Scene();
 
@@ -79,7 +100,15 @@ renderer.setSize(
 
 document.body.appendChild(renderer.domElement);
 
-const camera = criarCamera();
+camera = criarCamera();
+
+window.addEventListener("resize", atualizarTela);
+
+window.addEventListener("orientationchange", () => {
+
+  setTimeout(atualizarTela, 500);
+
+});
 
 const mapa = criarMapa(cena);
 cena.add(mapa);
