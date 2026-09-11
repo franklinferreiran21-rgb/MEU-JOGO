@@ -8,14 +8,12 @@ const cena = new THREE.Scene();
 cena.background = new THREE.Color(0x87ceeb);
 
 const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000);
-
 const renderer = new THREE.WebGLRenderer({antialias:true});
 renderer.setSize(innerWidth, innerHeight);
 document.body.appendChild(renderer.domElement);
 
 cena.add(new THREE.DirectionalLight(0xffffff,2));
 cena.add(new THREE.AmbientLight(0xffffff,0.5));
-
 cena.add(criarMapa());
 
 const player = criarPlayer();
@@ -26,7 +24,7 @@ const cam = criarCameraRotativa(camera, player);
 
 function animar(){
  requestAnimationFrame(animar);
- player.atualizar(joystick);
+ player.atualizar(joystick, cam.getRotacaoY());
  cam.atualizar();
  renderer.render(cena,camera);
 }
