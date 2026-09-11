@@ -22,27 +22,25 @@ export function criarTelaInicial(iniciarJogo){
    tela.removeEventListener('pointerdown', entrar);
 
    try{
-     const elemento = document.documentElement;
-
      if(!document.fullscreenElement){
-       if(elemento.requestFullscreen){
-         await elemento.requestFullscreen();
-       }else if(elemento.webkitRequestFullscreen){
-         elemento.webkitRequestFullscreen();
-       }
+       await document.documentElement.requestFullscreen();
      }
+
+     await new Promise(r => setTimeout(r, 200));
+
    }catch(e){
      console.log('Fullscreen bloqueado', e);
    }
 
    try{
-     if(screen.orientation && screen.orientation.lock){
+     if(screen.orientation?.lock){
        await screen.orientation.lock('landscape');
      }
    }catch(e){
      console.log('Rotação bloqueada', e);
    }
 
+   tela.remove();
    iniciarJogo();
  }
 
