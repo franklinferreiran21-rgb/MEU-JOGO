@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Meu Jogo 3D Modular</title>
+    <link rel="stylesheet" href="ui/joystick.css">
+    <style>
+        body, html { margin: 0; padding: 0; overflow: hidden; background-color: #111; }
+        canvas { display: block; }
+    </style>
+    <!-- Engine 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div id="camera-zone" style="position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; touch-action: none;"></div>
+
+    <div id="joystick-zone" style="z-index: 10;">
+        <div id="joystick-base">
+            <div id="joystick-stick"></div>
+        </div>
+    </div>
+
+    <!-- Chama apenas o main.js como MÓDULO -->
+    <script type="module" src="main.js"></script>
+</body>
+</html>
