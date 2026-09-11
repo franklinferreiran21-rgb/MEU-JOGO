@@ -13,23 +13,36 @@ export function criarTelaInicial(iniciarJogo){
  tela.style.fontFamily = 'Arial';
  tela.style.zIndex = '9999';
  tela.style.userSelect = 'none';
+ tela.style.touchAction = 'none';
 
  tela.innerHTML = 'TOQUE PARA JOGAR';
 
  async function entrar(){
-   try{
-     if(document.documentElement.requestFullscreen){
-       await document.documentElement.requestFullscreen();
-     }
-   }catch(e){}
+
+   tela.removeEventListener('pointerdown', entrar);
 
    try{
-     if(screen.orientation?.lock){
+     const elemento = document.documentElement;
+
+     if(!document.fullscreenElement){
+       if(elemento.requestFullscreen){
+         await elemento.requestFullscreen();
+       }else if(elemento.webkitRequestFullscreen){
+         elemento.webkitRequestFullscreen();
+       }
+     }
+   }catch(e){
+     console.log('Fullscreen bloqueado', e);
+   }
+
+   try{
+     if(screen.orientation && screen.orientation.lock){
        await screen.orientation.lock('landscape');
      }
-   }catch(e){}
+   }catch(e){
+     console.log('Rotação bloqueada', e);
+   }
 
-   tela.remove();
    iniciarJogo();
  }
 
