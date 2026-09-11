@@ -6,13 +6,55 @@
     <title>Meu Jogo 3D</title>
     <link rel="stylesheet" href="ui/joystick.css">
     <style>
-        body, html { margin: 0; padding: 0; overflow: hidden; background-color: #111; }
+        body, html { margin: 0; padding: 0; overflow: hidden; background-color: #111; font-family: sans-serif; }
         canvas { display: block; }
+        
+        /* --- ESTILO DA TELA INICIAL --- */
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(17, 17, 17, 0.9); /* Fundo escuro transparente */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100; /* Fica acima de tudo, inclusive do joystick */
+            color: #00ff88;
+            cursor: pointer;
+            backdrop-filter: blur(5px); /* Efeito de desfoque no fundo */
+        }
+
+        #start-screen h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        #start-screen p {
+            font-size: 1.2rem;
+            color: white;
+            animation: piscar 1.5s infinite; /* Animação clássica de fliperama */
+        }
+
+        @keyframes piscar {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
     </style>
     <!-- Engine 3D -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
+    <!-- TELA INICIAL -->
+    <div id="start-screen">
+        <h1>Meu Jogo 3D</h1>
+        <p>TOQUE PARA INICIAR</p>
+    </div>
+
     <!-- Zonas de Toque -->
     <div id="camera-zone" style="position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; touch-action: none;"></div>
 
@@ -22,7 +64,7 @@
         </div>
     </div>
 
-    <!-- Scripts importados na ordem (sem 'type="module"') -->
+    <!-- Scripts -->
     <script src="mapa/mapa.js"></script>
     <script src="ui/joystick.js"></script>
     <script src="player/player.js"></script>
