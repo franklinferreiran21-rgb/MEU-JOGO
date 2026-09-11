@@ -30,7 +30,6 @@ export function criarTelaInicial(iniciarJogo){
      console.log('Fullscreen:', e);
    }
 
-   // espera o navegador confirmar fullscreen antes da rotacao
    setTimeout(async()=>{
      try{
        if(screen.orientation && screen.orientation.lock){
@@ -40,7 +39,8 @@ export function criarTelaInicial(iniciarJogo){
        console.log('Rotacao:', e);
      }
 
-     botao.remove();
+     // esconder ao inves de remover para nao perder fullscreen no mobile
+     botao.style.display = 'none';
      iniciarJogo();
    },200);
  }
