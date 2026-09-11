@@ -14,35 +14,35 @@ const telaInicial = document.getElementById("tela-inicial");
 let jogoIniciado = false;
 let renderer;
 
-
 async function entrarTelaCheia(){
 
   try {
 
-    const elemento = renderer?.domElement || document.documentElement;
+    if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
 
-    if (!document.fullscreenElement && elemento.requestFullscreen) {
-
-      await elemento.requestFullscreen({
+      await document.documentElement.requestFullscreen({
         navigationUI: "hide"
       });
 
     }
 
+  } catch (erro) {
+    console.log("Fullscreen bloqueado:", erro);
+  }
+
+  try {
+
     if (screen.orientation && screen.orientation.lock) {
 
-      await screen.orientation.lock("landscape");
+      await screen.orientation.lock("landscape-primary");
 
     }
 
   } catch (erro) {
-
-    console.log("Fullscreen/rotacao bloqueada:", erro);
-
+    console.log("Rotacao bloqueada:", erro);
   }
 
 }
-
 
 async function iniciarJogo(e) {
 
@@ -59,8 +59,7 @@ async function iniciarJogo(e) {
 }
 
 
-telaInicial.addEventListener("click", iniciarJogo);
-telaInicial.addEventListener("touchstart", iniciarJogo, { passive:false });
+telaInicial.addEventListener("pointerup", iniciarJogo);
 
 
 const cena = new THREE.Scene();
@@ -80,7 +79,6 @@ renderer.setSize(
 
 document.body.appendChild(renderer.domElement);
 
-
 const camera = criarCamera();
 
 const mapa = criarMapa(cena);
@@ -88,7 +86,6 @@ cena.add(mapa);
 
 const player = criarPlayer();
 cena.add(player);
-
 
 function animar(){
 
