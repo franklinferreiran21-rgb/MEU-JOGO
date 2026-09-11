@@ -1,56 +1,51 @@
 export function criarTelaInicial(iniciarJogo){
 
- const tela = document.createElement('div');
  const botao = document.createElement('button');
 
- tela.style.position = 'fixed';
- tela.style.inset = '0';
- tela.style.display = 'flex';
- tela.style.alignItems = 'center';
- tela.style.justifyContent = 'center';
- tela.style.background = 'rgba(0,0,0,0.55)';
- tela.style.zIndex = '9999';
- tela.style.touchAction = 'none';
-
- botao.textContent = 'TOQUE PARA JOGAR';
- botao.style.fontSize = '40px';
- botao.style.fontFamily = 'Arial';
+ botao.innerText = 'TOQUE PARA JOGAR';
+ botao.style.position = 'fixed';
+ botao.style.inset = '0';
+ botao.style.width = '100%';
+ botao.style.height = '100%';
+ botao.style.background = 'rgba(0,0,0,0.55)';
  botao.style.color = 'white';
- botao.style.background = 'transparent';
+ botao.style.fontSize = '40px';
  botao.style.border = '0';
- botao.style.userSelect = 'none';
+ botao.style.zIndex = '9999';
  botao.style.touchAction = 'none';
 
- async function entrar(e){
-   e.preventDefault();
-   botao.removeEventListener('pointerdown', entrar);
+ async function entrar(){
+
+   botao.disabled = true;
 
    try{
-     if(tela.requestFullscreen){
-       await tela.requestFullscreen();
-     }else if(document.documentElement.requestFullscreen){
-       await document.documentElement.requestFullscreen();
-     }else if(document.documentElement.webkitRequestFullscreen){
-       document.documentElement.webkitRequestFullscreen();
+     if(!document.fullscreenElement){
+       if(botao.requestFullscreen){
+         await botao.requestFullscreen();
+       }else if(document.documentElement.requestFullscreen){
+         await document.documentElement.requestFullscreen();
+       }
      }
-   }catch(err){
-     console.log('Fullscreen bloqueado:', err);
+   }catch(e){
+     console.log('Fullscreen:', e);
    }
 
-   try{
-     if(screen.orientation?.lock){
-       await screen.orientation.lock('landscape-primary');
+   // espera o navegador confirmar fullscreen antes da rotacao
+   setTimeout(async()=>{
+     try{
+       if(screen.orientation && screen.orientation.lock){
+         await screen.orientation.lock('landscape-primary');
+       }
+     }catch(e){
+       console.log('Rotacao:', e);
      }
-   }catch(err){
-     console.log('Orientacao bloqueada:', err);
-   }
 
-   tela.remove();
-   iniciarJogo();
+     botao.remove();
+     iniciarJogo();
+   },200);
  }
 
- botao.addEventListener('pointerdown', entrar, {passive:false});
- tela.appendChild(botao);
- document.body.appendChild(tela);
+ botao.addEventListener('pointerup', entrar, {passive:false});
+ document.body.appendChild(botao);
 
 }
