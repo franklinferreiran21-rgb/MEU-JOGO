@@ -6,12 +6,16 @@ export function criarCameraRotativa(camera, alvo){
     let rotacaoY = 0;
     let rotacaoX = 0;
 
+    let alvoRotacaoY = 0;
+    let alvoRotacaoX = 0;
+
     let ponteiroCamera = null;
     let ultimoX = 0;
     let ultimoY = 0;
 
-    const sensibilidadeX = 0.015;
-    const sensibilidadeY = 0.012;
+    const sensibilidadeX = 0.012;
+    const sensibilidadeY = 0.010;
+    const suavidade = 0.18;
 
     document.addEventListener('pointerdown',(e)=>{
         if(e.target.closest('#joystick')) return;
@@ -29,11 +33,10 @@ export function criarCameraRotativa(camera, alvo){
         const dx = e.clientX - ultimoX;
         const dy = e.clientY - ultimoY;
 
-        // Mais rápida e suave
-        rotacaoY -= dx * sensibilidadeX;
-        rotacaoX += dy * sensibilidadeY;
+        alvoRotacaoY -= dx * sensibilidadeX;
+        alvoRotacaoX += dy * sensibilidadeY;
 
-        rotacaoX = Math.max(-1.1, Math.min(1.1, rotacaoX));
+        alvoRotacaoX = Math.max(-1.1, Math.min(1.1, alvoRotacaoX));
 
         ultimoX = e.clientX;
         ultimoY = e.clientY;
@@ -46,6 +49,9 @@ export function criarCameraRotativa(camera, alvo){
     });
 
     function atualizar(){
+
+        rotacaoY += (alvoRotacaoY - rotacaoY) * suavidade;
+        rotacaoX += (alvoRotacaoX - rotacaoX) * suavidade;
 
         const alturaAtual = Math.sin(rotacaoX) * distancia;
         const distanciaHorizontal = Math.cos(rotacaoX) * distancia;
