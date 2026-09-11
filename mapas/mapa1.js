@@ -8,5 +8,6 @@ export function criarMapa(){
  const chao = new THREE.Mesh(geometria,material);
  chao.position.y=-0.1;
  grupo.add(chao);
- 
+
+ return grupo;
 }
