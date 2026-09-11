@@ -5,55 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Meu Jogo 3D</title>
 <style>
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#87ceeb}
+html,body{
+ margin:0;
+ width:100%;
+ height:100%;
+ overflow:hidden;
+ background:#87ceeb;
+}
 canvas{display:block}
 </style>
 </head>
 <body>
-<script type="module">
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
-import { criarMapa } from './mapas/mapa1.js';
-import { criarPlayer } from './player/player.js';
-import { criarJoystick } from './ui/joystick.js';
-import { criarCameraRotativa } from './ui/cam.js';
-
-const cena = new THREE.Scene();
-cena.background = new THREE.Color(0x87ceeb);
-
-const camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 1000);
-
-const renderer = new THREE.WebGLRenderer({antialias:true});
-renderer.setSize(innerWidth, innerHeight);
-document.body.appendChild(renderer.domElement);
-
-const luz = new THREE.DirectionalLight(0xffffff,2);
-luz.position.set(5,10,5);
-cena.add(luz);
-cena.add(new THREE.AmbientLight(0xffffff,0.5));
-
-cena.add(criarMapa());
-
-const player = criarPlayer();
-cena.add(player);
-
-const joystick = criarJoystick();
-const cam = criarCameraRotativa(camera, player);
-
-function animar(){
- requestAnimationFrame(animar);
-
- player.atualizar(joystick);
- cam.atualizar();
-
- renderer.render(cena,camera);
-}
-animar();
-
-addEventListener('resize',()=>{
- renderer.setSize(innerWidth,innerHeight);
- camera.aspect=innerWidth/innerHeight;
- camera.updateProjectionMatrix();
-});
-</script>
+<script type="module" src="./main.js"></script>
 </body>
 </html>
