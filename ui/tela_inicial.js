@@ -17,24 +17,32 @@ export function criarTelaInicial(iniciarJogo){
 
  tela.innerHTML = 'TOQUE PARA JOGAR';
 
- async function entrar(){
+ async function entrar(e){
 
+   e.preventDefault();
    tela.removeEventListener('pointerdown', entrar);
 
    try{
+     const el = document.documentElement;
+
      if(!document.fullscreenElement){
-       await document.documentElement.requestFullscreen();
+       if(el.requestFullscreen){
+         await el.requestFullscreen();
+       }else if(el.webkitRequestFullscreen){
+         el.webkitRequestFullscreen();
+       }
      }
-
-     await new Promise(r => setTimeout(r, 200));
-
    }catch(e){
      console.log('Fullscreen bloqueado', e);
    }
 
    try{
+     if(screen.orientation?.unlock){
+       screen.orientation.unlock();
+     }
+
      if(screen.orientation?.lock){
-       await screen.orientation.lock('landscape');
+       await screen.orientation.lock('landscape-primary');
      }
    }catch(e){
      console.log('Rotação bloqueada', e);
@@ -44,7 +52,7 @@ export function criarTelaInicial(iniciarJogo){
    iniciarJogo();
  }
 
- tela.addEventListener('pointerdown', entrar);
+ tela.addEventListener('pointerdown', entrar, {once:true});
  document.body.appendChild(tela);
 
 }
