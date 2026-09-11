@@ -1,11 +1,25 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
-import { criarMapa } from './mapas/mapa1.js';
+import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/loaders/GLTFLoader.js';
 import { criarPlayer } from './player/player.js';
 import { criarJoystick } from './ui/joystick.js';
 import { criarCameraRotativa } from './ui/cam.js';
 import { criarTelaInicial } from './ui/tela_inicial.js';
 
-function iniciarJogo(){
+function carregarMapa(cena){
+ return new Promise((resolve)=>{
+  const loader = new GLTFLoader();
+
+  loader.load('./mapa.gltf', (gltf)=>{
+    cena.add(gltf.scene);
+    resolve();
+  }, undefined, (erro)=>{
+    console.error('Erro carregando mapa.gltf:', erro);
+    resolve();
+  });
+ });
+}
+
+async function iniciarJogo(){
 
 const cena = new THREE.Scene();
 cena.background = new THREE.Color(0x87ceeb);
@@ -17,7 +31,8 @@ document.body.appendChild(renderer.domElement);
 
 cena.add(new THREE.DirectionalLight(0xffffff,2));
 cena.add(new THREE.AmbientLight(0xffffff,0.5));
-cena.add(criarMapa());
+
+await carregarMapa(cena);
 
 const player = criarPlayer();
 cena.add(player);
