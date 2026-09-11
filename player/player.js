@@ -8,5 +8,14 @@ export function criarPlayer(){
  const player = new THREE.Mesh(geometria,material);
  player.position.y=1;
 
+ player.velocidade = 0.08;
+
+ player.atualizar = function(joystick){
+
+   player.position.x += joystick.x * player.velocidade;
+   player.position.z += joystick.y * player.velocidade;
+
+ };
+
  return player;
 }
