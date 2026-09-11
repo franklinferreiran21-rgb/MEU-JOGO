@@ -19,30 +19,28 @@ export function criarTelaInicial(iniciarJogo){
    botao.disabled = true;
 
    try{
+     // fullscreen no documento, nao no botao
      if(!document.fullscreenElement){
-       if(botao.requestFullscreen){
-         await botao.requestFullscreen();
-       }else if(document.documentElement.requestFullscreen){
+       if(document.documentElement.requestFullscreen){
          await document.documentElement.requestFullscreen();
+       }else if(document.documentElement.webkitRequestFullscreen){
+         document.documentElement.webkitRequestFullscreen();
        }
      }
    }catch(e){
      console.log('Fullscreen:', e);
    }
 
-   setTimeout(async()=>{
-     try{
-       if(screen.orientation && screen.orientation.lock){
-         await screen.orientation.lock('landscape-primary');
-       }
-     }catch(e){
-       console.log('Rotacao:', e);
+   try{
+     if(screen.orientation && screen.orientation.lock){
+       await screen.orientation.lock('landscape-primary');
      }
+   }catch(e){
+     console.log('Rotacao:', e);
+   }
 
-     // esconder ao inves de remover para nao perder fullscreen no mobile
-     botao.style.display = 'none';
-     iniciarJogo();
-   },200);
+   botao.style.display = 'none';
+   iniciarJogo();
  }
 
  botao.addEventListener('pointerup', entrar, {passive:false});
