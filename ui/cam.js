@@ -10,6 +10,9 @@ export function criarCameraRotativa(camera, alvo){
     let ultimoX = 0;
     let ultimoY = 0;
 
+    const sensibilidadeX = 0.015;
+    const sensibilidadeY = 0.012;
+
     document.addEventListener('pointerdown',(e)=>{
         if(e.target.closest('#joystick')) return;
 
@@ -26,12 +29,10 @@ export function criarCameraRotativa(camera, alvo){
         const dx = e.clientX - ultimoX;
         const dy = e.clientY - ultimoY;
 
-        // Rotacao horizontal (eixo Y)
-        rotacaoY -= dx * 0.008;
+        // Mais rápida e suave
+        rotacaoY -= dx * sensibilidadeX;
+        rotacaoX += dy * sensibilidadeY;
 
-        // Rotacao vertical (eixo X) corrigida
-        // Arrastar para cima agora olha para cima
-        rotacaoX += dy * 0.006;
         rotacaoX = Math.max(-1.1, Math.min(1.1, rotacaoX));
 
         ultimoX = e.clientX;
