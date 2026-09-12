@@ -1,6 +1,6 @@
 class Player {
     constructor(scene) {
-        this.speed = 0.09;
+        this.speed = 0.999;
         
         this.width = 1;
         this.height = 2;
@@ -25,31 +25,31 @@ class Player {
         scene.add(this.mesh);
     }
 
-    update(joystickVector, cameraYaw, mapSize) {
-        if (joystickVector.x === 0 && joystickVector.y === 0) return;
+        // Substitua o antigo update() por este calcularMovimento()
+    calcularMovimento(joystickVector, cameraYaw, mapSize) {
+        if (joystickVector.x === 0 && joystickVector.y === 0) return null;
 
         const joyX = joystickVector.x;
         const joyY = -joystickVector.y;
-
         const force = Math.min(1, Math.sqrt(joyX * joyX + joyY * joyY));
         
-        // Eixo X invertido para consertar a "miragem" na rotação
         const joyAngle = Math.atan2(-joyX, joyY);
-        
         const moveAngle = cameraYaw + joyAngle;
 
-        // Movimentação subtraindo para acompanhar o Three.js
-        this.mesh.position.x -= Math.sin(moveAngle) * this.speed * force;
-        this.mesh.position.z -= Math.cos(moveAngle) * this.speed * force; 
+        let proximoX = this.mesh.position.x - Math.sin(moveAngle) * this.speed * force;
+        let proximoZ = this.mesh.position.z - Math.cos(moveAngle) * this.speed * force; 
 
         // Colisão mapa
         const limite = mapSize / 2 - (this.width / 2);
-        this.mesh.position.x = Math.max(-limite, Math.min(this.mesh.position.x, limite));
-        this.mesh.position.z = Math.max(-limite, Math.min(this.mesh.position.z, limite));
+        proximoX = Math.max(-limite, Math.min(proximoX, limite));
+        proximoZ = Math.max(-limite, Math.min(proximoZ, limite));
 
-        // Flip da Visão
+        // Rotação
         let diff = moveAngle - this.mesh.rotation.y;
         diff = Math.atan2(Math.sin(diff), Math.cos(diff)); 
-        this.mesh.rotation.y += diff * 0.25; 
+        let proximaRotY = this.mesh.rotation.y + diff * 0.25; 
+
+        // Retorna as coordenadas calculadas em vez de aplicá-las
+        return { x: proximoX, z: proximoZ, rotY: proximaRotY };
     }
 }
