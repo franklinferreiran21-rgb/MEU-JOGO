@@ -1,6 +1,6 @@
 class Player {
     constructor(scene) {
-        this.speed = 0.09; // Esta é a variável local (a "isca" que o hacker vai tentar mudar)
+        this.speed = 0.999; // Esta é a variável local (a "isca" que o hacker vai tentar mudar)
         
         this.width = 1;
         this.height = 2;
