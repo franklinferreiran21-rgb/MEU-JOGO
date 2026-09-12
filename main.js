@@ -98,7 +98,7 @@ setInterval(async () => {
 
     ultimaPosicaoRegistrada = { ...posicaoAtual };
     ultimoTempoRegistrado = tempoAtual;
-}, 2000); // Aciona o Cloudflare a cada 2 segundos
+}, 500); // Aciona o Cloudflare a cada 2 segundos
 
 // --- GAME LOOP ---
 function gameLoop() {
