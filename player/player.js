@@ -1,6 +1,6 @@
 class Player {
     constructor(scene) {
-        this.speed = 0.999;
+        this.speed = 0.09; // Esta é a variável local (a "isca" que o hacker vai tentar mudar)
         
         this.width = 1;
         this.height = 2;
@@ -25,31 +25,28 @@ class Player {
         scene.add(this.mesh);
     }
 
-        // Substitua o antigo update() por este calcularMovimento()
-    calcularMovimento(joystickVector, cameraYaw, mapSize) {
-        if (joystickVector.x === 0 && joystickVector.y === 0) return null;
+    update(joystickVector, cameraYaw, mapSize) {
+        if (joystickVector.x === 0 && joystickVector.y === 0) return;
 
         const joyX = joystickVector.x;
         const joyY = -joystickVector.y;
+
         const force = Math.min(1, Math.sqrt(joyX * joyX + joyY * joyY));
         
         const joyAngle = Math.atan2(-joyX, joyY);
         const moveAngle = cameraYaw + joyAngle;
 
-        let proximoX = this.mesh.position.x - Math.sin(moveAngle) * this.speed * force;
-        let proximoZ = this.mesh.position.z - Math.cos(moveAngle) * this.speed * force; 
+        this.mesh.position.x -= Math.sin(moveAngle) * this.speed * force;
+        this.mesh.position.z -= Math.cos(moveAngle) * this.speed * force; 
 
         // Colisão mapa
         const limite = mapSize / 2 - (this.width / 2);
-        proximoX = Math.max(-limite, Math.min(proximoX, limite));
-        proximoZ = Math.max(-limite, Math.min(proximoZ, limite));
+        this.mesh.position.x = Math.max(-limite, Math.min(this.mesh.position.x, limite));
+        this.mesh.position.z = Math.max(-limite, Math.min(this.mesh.position.z, limite));
 
-        // Rotação
+        // Flip da Visão
         let diff = moveAngle - this.mesh.rotation.y;
         diff = Math.atan2(Math.sin(diff), Math.cos(diff)); 
-        let proximaRotY = this.mesh.rotation.y + diff * 0.25; 
-
-        // Retorna as coordenadas calculadas em vez de aplicá-las
-        return { x: proximoX, z: proximoZ, rotY: proximaRotY };
+        this.mesh.rotation.y += diff * 0.25; 
     }
 }
