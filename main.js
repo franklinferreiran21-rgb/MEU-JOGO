@@ -1,3 +1,22 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCAx55ZeeI8Q1_xpkikA-bIAWz4yRYxHeI",
+  authDomain: "meu-jogo-43bcc.firebaseapp.com",
+  databaseURL: "https://meu-jogo-43bcc-default-rtdb.firebaseio.com",
+  projectId: "meu-jogo-43bcc",
+  storageBucket: "meu-jogo-43bcc.firebasestorage.app",
+  messagingSenderId: "4349336361",
+  appId: "1:4349336361:web:822bcf091759f56d167538"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// ... (Mantenha todo o seu código de mapa, cena, câmera e tela inicial aqui) ...
+
+
 // main.js - O Cérebro do Jogo
 
 const tamanhoMapa = 200; 
@@ -52,22 +71,38 @@ startScreen.addEventListener('click', async () => {
     startScreen.style.display = 'none';
 });
 
+// --- SISTEMA MULTIPLAYER / SEGURANÇA ---
+const playerRef = ref(db, 'jogadores/player1');
+
+// O cliente escuta o servidor: se o banco mudar, o boneco move!
+onValue(playerRef, (snapshot) => {
+    const dados = snapshot.val();
+    if (dados) {
+        player.mesh.position.x = dados.x;
+        player.mesh.position.z = dados.z;
+        player.mesh.rotation.y = dados.rotY;
+    }
+});
+
 // --- GAME LOOP ---
 function gameLoop() {
     requestAnimationFrame(gameLoop);
 
-    // Se a tela inicial ainda estiver visível, o jogo fica "pausado" (não move o player)
     if (startScreen.style.display !== 'none') {
         renderer.render(scene, camera);
         return; 
     }
 
-    // Atualiza lógica apenas quando estiver jogando
-    player.update(joystick.getVector(), cam.getYaw(), tamanhoMapa);
-    cam.update(player);
+    // Calcula para onde o joystick quer ir
+    const novoMovimento = player.calcularMovimento(joystick.getVector(), cam.getYaw(), tamanhoMapa);
+    
+    // Se houve movimento, envia para a nuvem
+    if (novoMovimento) {
+        set(playerRef, novoMovimento);
+    }
 
+    cam.update(player);
     renderer.render(scene, camera);
 }
 
-// Iniciar!
 gameLoop();
