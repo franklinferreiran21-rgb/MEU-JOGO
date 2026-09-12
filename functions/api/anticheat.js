@@ -6,7 +6,7 @@ export async function onRequestPost(context) {
 
         // --- A VARIÁVEL BLINDADA ---
         // O hacker não tem como ver ou alterar isso pelo F12
-        const SPEED_MAX = 0.09; 
+        const SPEED_MAX = 0.99; 
         
         // Calcula a distância matemática máxima baseada no tempo
         // 60 frames por segundo (1000ms / 60)
